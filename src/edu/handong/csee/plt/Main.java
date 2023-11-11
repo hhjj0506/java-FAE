@@ -21,7 +21,7 @@ public class Main {
 		    exampleCode = args[1];	
 		}
 		else {
-			System.out.println("Usage <-p>? <FAE>");
+			System.out.println("Usage : java -cp [class_path_settings] [your_class_name_that_has_main_method] [-p]? [FAE]");
 			System.exit(1);
 		}
 
@@ -29,7 +29,7 @@ public class Main {
 		AST ast = parser.parse(exampleCode);
 		
 		if(ast == null) {
-			System.out.println("Syntax Error!");
+			System.out.println("Syntax is incorrect");
 		}
 		
 		if(onlyParser) {	
