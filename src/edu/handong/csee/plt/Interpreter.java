@@ -77,13 +77,13 @@ public class Interpreter {
 		if(ast instanceof App) {
 			App app = (App)ast;
 
-			FAEVal f_val = interp(app.getFundef(), ds);	// define f-val
+			FAEVal f_val = interp(app.getFundef(), ds);	
 			
-			NumV _false = new NumV("0");						// define a-val 
+			NumV _false = new NumV("0");						
 			ExprV expr = new ExprV(app.getArg(), ds, _false);
 			FAEVal a_val = expr;									
 			
-			if(f_val instanceof ClosureV) {		// for static scope (ClosureV)
+			if(f_val instanceof ClosureV) {	
 				DefrdSub sCache = new ASub(((ClosureV)f_val).getCparam(), a_val, ((ClosureV)f_val).getCds());
 				return interp(((ClosureV)f_val).getCbody(), sCache);	
 			} else {

@@ -7,17 +7,16 @@ import edu.handong.csee.plt.ast.MtSub;
 
 public class Main {
 	
-	static boolean onlyParser = false; // for -p option
+	static boolean onlyParser = false;
 	
 	public static void main(String[] args) {
 		
-		// This is just an example code. Use args to get -p option and actual code from CLI
-		String exampleCode = "{+ {+ 2 {+ {+ 4 5} 4}} {+ 1 2}}";
+		String exampleCode = "";
 		
-		if(args.length == 1) {			// Only Result
+		if(args.length == 1) {		
 			exampleCode = args[0];	
 		}
-		else if (args.length == 2 && args[0].equals("-p")) {		// Only Parser
+		else if (args.length == 2 && args[0].equals("-p")) {	
 			onlyParser = true;
 		    exampleCode = args[1];	
 		}
@@ -26,23 +25,22 @@ public class Main {
 			System.exit(1);
 		}
 
-		// Parser
 		Parser parser = new Parser();
 		AST ast = parser.parse(exampleCode);
 		
-		if(ast == null)
+		if(ast == null) {
 			System.out.println("Syntax Error!");
+		}
 		
 		if(onlyParser) {	
-			System.out.println(ast.getASTCode());	// Print Abstract Code
-		}
-		else {			
+			System.out.println(ast.getASTCode());
+		} else {			
 			Interpreter interpreter = new Interpreter();
 			DefrdSub mtSub = new MtSub();
 			
 			FAEVal result = interpreter.interp(ast, mtSub);
 
-			System.out.println(result.getASTCode());	// Print Result
+			System.out.println(result.getASTCode());
 		}
 	}
 }

@@ -2,7 +2,7 @@ package edu.handong.csee.plt.ast;
 
 public class FAEVal extends AST {
     public String getASTCode(){
-		String astCode="";
+		String astCode = "";
 		
 		if(this instanceof NumV) {
 			astCode = ((NumV)this).getASTCode();
