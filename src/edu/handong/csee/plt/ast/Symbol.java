@@ -7,11 +7,11 @@ public class Symbol extends AST {
 		this.Symbol = Symbol;
 	}
 	
-	public String getSymbol() {		// for interp
+	public String getSymbol() {	
 		return Symbol;
 	}
 	
-	public String getASTCode() {	// for parser
+	public String getASTCode() {
 		return "(id '" + Symbol +")";
 	}
 }

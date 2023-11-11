@@ -16,23 +16,22 @@ public class Parser {
 	AST parse(String exampleCode) {
 		ArrayList<String> subExpressions = splitExpressionAsSubExpressions(exampleCode);
 
-		// num
 		if(subExpressions.size() == 1 && isNumeric(subExpressions.get(0))) {
 			return new Num(subExpressions.get(0));
 		}
-		// add
+
 		if(subExpressions.get(0).equals("+")) {	
 			return new Add(parse(subExpressions.get(1)),parse(subExpressions.get(2)));
 		}
-		// sub
+
 		if(subExpressions.get(0).equals("-")) {	
 			return new Sub(parse(subExpressions.get(1)),parse(subExpressions.get(2)));
 		}
-		// symbol
+
 		if(subExpressions.size() == 1 && !subExpressions.get(0).equals("with")) {
 			return new Symbol(subExpressions.get(0));
 		}
-		// with
+
 		if(subExpressions.get(0).equals("with")) {
 			String[] divided = subExpressions.get(1).split(" ", 2);
 			String idtf = divided[0].substring(1);
@@ -41,13 +40,12 @@ public class Parser {
 			Fun fun = new Fun(idtf, parse(subExpressions.get(2)));			
 			return new App(fun, parse(value));
 		}
-		// fun
+
 		if(subExpressions.get(0).equals("fun")) {		
 			String param = subExpressions.get(1).substring(1,subExpressions.get(1).length()-1);
 			return new Fun(param, parse(subExpressions.get(2)));
 		}	
 		
-		// app
 		if(subExpressions.get(0).startsWith("{") || subExpressions.size() == 2) { 
 			return new App(parse(subExpressions.get(0)),parse(subExpressions.get(1)));
 		}	
@@ -57,7 +55,6 @@ public class Parser {
 
 	private ArrayList<String> splitExpressionAsSubExpressions(String exampleCode) {
 
-		// deal with brackets first.
 		if ((exampleCode.startsWith("{") && !exampleCode.endsWith("}"))
 				|| (!exampleCode.startsWith("{") && exampleCode.endsWith("}"))) {
 			System.out.println("Syntax error");
