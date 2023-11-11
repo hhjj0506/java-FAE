@@ -21,7 +21,7 @@ public class Main {
 		    exampleCode = args[1];	
 		}
 		else {
-			System.out.println("Usage : java -cp [class_path_settings] [your_class_name_that_has_main_method] [-p]? [FAE]");
+			System.out.println("Usage : java -cp [class_path_settings] edu.handong.csee.plt.Main [-p]? [FAE]");
 			System.exit(1);
 		}
 
