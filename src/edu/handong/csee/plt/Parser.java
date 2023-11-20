@@ -8,6 +8,7 @@ import edu.handong.csee.plt.ast.Add;
 import edu.handong.csee.plt.ast.App;
 import edu.handong.csee.plt.ast.Fun;
 import edu.handong.csee.plt.ast.Num;
+import edu.handong.csee.plt.ast.Rec;
 import edu.handong.csee.plt.ast.Sub;
 import edu.handong.csee.plt.ast.Symbol;
 
@@ -44,7 +45,14 @@ public class Parser {
 		if(subExpressions.get(0).equals("fun")) {		
 			String param = subExpressions.get(1).substring(1,subExpressions.get(1).length()-1);
 			return new Fun(param, parse(subExpressions.get(2)));
-		}	
+		}
+
+		if (subExpressions.get(0).equals("rec")) {
+            String name = subExpressions.get(1).substring(1);
+            AST funExpr = parse(subExpressions.get(2));
+            AST fstCall = parse(subExpressions.get(3));
+            return new Rec(name, funExpr, fstCall);
+        }
 		
 		if(subExpressions.get(0).startsWith("{") || subExpressions.size() == 2) { 
 			return new App(parse(subExpressions.get(0)),parse(subExpressions.get(1)));

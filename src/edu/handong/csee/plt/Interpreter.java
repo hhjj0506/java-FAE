@@ -11,6 +11,7 @@ import edu.handong.csee.plt.ast.FAEVal;
 import edu.handong.csee.plt.ast.Fun;
 import edu.handong.csee.plt.ast.Num;
 import edu.handong.csee.plt.ast.NumV;
+import edu.handong.csee.plt.ast.Rec;
 import edu.handong.csee.plt.ast.Sub;
 import edu.handong.csee.plt.ast.Symbol;
 
@@ -45,7 +46,42 @@ public class Interpreter {
 		}
 		return value;
 	}
+
+	public boolean isRecursion(AST ast) {
+        if (ast instanceof Rec) {
+            Rec rec = (Rec) ast;
+            return containsRecursion(rec.getFunExpr(), rec.getFunExpr()) ||
+                    containsRecursion(rec.getFstCall(), rec.getFunExpr());
+        }
+        return false;
+    }
+
+    private boolean containsRecursion(AST current, AST target) {
+        if (current == target) {
+            return true;
+        } else if (current instanceof Rec) {
+            Rec rec = (Rec) current;
+            return containsRecursion(rec.getFunExpr(), target) || containsRecursion(rec.getFstCall(), target);
+        } else if (current instanceof Add) {
+            Add add = (Add) current;
+            return containsRecursion(add.getLhs(), target) || containsRecursion(add.getRhs(), target);
+        }
+
+        return false;
+    }
+
+    public AST desugar(AST ast) {
+        if (isRecursion(ast)) {
+            return desugarRecursion(ast);
+        } else {
+            return ast;
+        }
+    }
 	
+	private AST desugarRecursion(AST ast) {
+		return null;
+	}
+
 	public FAEVal interp(AST ast, DefrdSub ds) {
 				
 		if(ast instanceof Num) {		
@@ -72,7 +108,11 @@ public class Interpreter {
 			ClosureV fun = new ClosureV(((Fun)ast).getParam(), ((Fun)ast).getFbody() ,ds);
 			return fun;  
 		}
-		
+
+		if (ast instanceof Rec) {
+            Rec rec = (Rec) ast;
+            return desugarRecursion(rec, ds);
+        }
 		
 		if(ast instanceof App) {
 			App app = (App)ast;
@@ -94,4 +134,25 @@ public class Interpreter {
 		
 		return null;
 	}
+
+	private FAEVal desugarRecursion(Rec rec, DefrdSub ds) {
+        String name = rec.getName();
+        Fun funExpr = (Fun) rec.getFunExpr();
+        Fun fstCall = (Fun) rec.getFstCall();
+
+        // Apply the mk-rec template
+        AST mkRecTemplate = new App(
+                new Fun("mk-rec", new Fun("body-proc", new App(
+                        new App(new Symbol("body-proc"), new Fun(name, funExpr.getFbody())), new Symbol(name))))
+        );
+        FAEVal desugared = interp(mkRecTemplate, ds);
+
+        // Apply the desugared recursion
+        App desugaredRecursion = new App(
+                new App(new Symbol(name), desugared),
+                interp(fstCall.getFbody(), new ASub(fstCall.getParam(), rec.getFstCall(), ds))
+        );
+
+        return interp(desugaredRecursion, ds);
+    }
 }

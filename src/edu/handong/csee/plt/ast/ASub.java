@@ -11,7 +11,10 @@ public class ASub extends DefrdSub {
 		this.ds = ds;
 	}
 	
-	public String getName() {
+	public ASub(String param, AST fstCall, DefrdSub ds2) {
+    }
+
+    public String getName() {
 		return name;
 	}
 	
