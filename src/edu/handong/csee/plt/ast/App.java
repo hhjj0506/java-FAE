@@ -9,7 +9,10 @@ public class App extends AST {
 		this.arg = arg;
 	}
 	
-	public AST getFundef() {
+	public App(Fun fun) {
+    }
+
+    public AST getFundef() {
 		return fundef;
 	}
 
